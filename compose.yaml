@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: reconciler
+      POSTGRES_PASSWORD: reconciler-local
+      POSTGRES_DB: reconciler
+    ports:
+      - "127.0.0.1:55438:5432"
+    volumes:
+      - reconciler-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reconciler -d reconciler"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  api:
+    build: .
+    profiles: [api]
+    environment:
+      DATABASE_URL: postgres://reconciler:reconciler-local@postgres:5432/reconciler?sslmode=disable
+      LISTEN_ADDR: 0.0.0.0:8081
+      ALLOW_FIXTURES: "true"
+      TENANT_TOKENS: '{"local-demo-token-change-me-0001":{"tenant_id":"demo","actor":"developer"}}'
+    ports:
+      - "127.0.0.1:8081:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+  demo:
+    build: .
+    profiles: [demo]
+    entrypoint: [/app/demo]
+    environment:
+      DATABASE_URL: postgres://reconciler:reconciler-local@postgres:5432/reconciler?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+volumes:
+  reconciler-data:

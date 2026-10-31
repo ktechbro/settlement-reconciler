@@ -14,21 +14,23 @@ import (
 )
 
 type IndexerSettlement struct {
-	ID              int64           `json:"id"`
-	Chain           string          `json:"chain"`
-	Asset           string          `json:"asset"`
-	TransactionHash string          `json:"transaction_hash"`
-	LogIndex        int64           `json:"log_index"`
-	BlockNumber     int64           `json:"block_number"`
-	BlockHash       string          `json:"block_hash"`
-	BlockTime       int64           `json:"block_time"`
-	Sender          string          `json:"sender"`
-	Recipient       string          `json:"recipient"`
-	Amount          string          `json:"amount_atomic"`
-	Provider        string          `json:"provider"`
-	FinalizedNumber int64           `json:"finalized_number"`
-	FinalizedHash   string          `json:"finalized_hash"`
-	Raw             json.RawMessage `json:"raw_log"`
+	SenderAccount    string          `json:"sender_account,omitempty"`
+	RecipientAccount string          `json:"recipient_account,omitempty"`
+	ID               int64           `json:"id"`
+	Chain            string          `json:"chain"`
+	Asset            string          `json:"asset"`
+	TransactionHash  string          `json:"transaction_hash"`
+	LogIndex         int64           `json:"log_index"`
+	BlockNumber      int64           `json:"block_number"`
+	BlockHash        string          `json:"block_hash"`
+	BlockTime        int64           `json:"block_time"`
+	Sender           string          `json:"sender"`
+	Recipient        string          `json:"recipient"`
+	Amount           string          `json:"amount_atomic"`
+	Provider         string          `json:"provider"`
+	FinalizedNumber  int64           `json:"finalized_number"`
+	FinalizedHash    string          `json:"finalized_hash"`
+	Raw              json.RawMessage `json:"raw_log"`
 }
 
 // ImportPage consumes Project 1's scope-filtered REST API. Cursor and evidence commit together.

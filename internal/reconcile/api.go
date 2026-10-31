@@ -84,7 +84,7 @@ func Handler(service *Service, auth Auth) http.Handler {
 			next(w, r, p)
 		}
 	}
-	for _, kind := range []string{"decisions", "mappings", "payment-attempts", "settlements", "coverage", "reconcile", "resolutions"} {
+	for _, kind := range []string{"decisions", "mappings", "payment-attempts", "settlements", "coverage", "reconcile", "resolutions", "escrow-deals", "escrow-events"} {
 		handler := protected(func(w http.ResponseWriter, r *http.Request, p Principal) {
 			raw, err := io.ReadAll(http.MaxBytesReader(w, r.Body, 1<<20))
 			if err != nil {
@@ -143,6 +143,14 @@ func Handler(service *Service, auth Auth) http.Handler {
 	}))
 	mux.HandleFunc("GET /v1/decisions/{id}/evidence", protected(func(w http.ResponseWriter, r *http.Request, p Principal) {
 		value, err := service.Store.Trace(r.Context(), p.Tenant, r.PathValue("id"))
+		if err != nil {
+			failure(w, err)
+			return
+		}
+		respond(w, 200, value)
+	}))
+	mux.HandleFunc("GET /v1/escrows/{id}/evidence", protected(func(w http.ResponseWriter, r *http.Request, p Principal) {
+		value, err := service.Store.EscrowTrace(r.Context(), p.Tenant, r.PathValue("id"))
 		if err != nil {
 			failure(w, err)
 			return

@@ -45,6 +45,9 @@ func Open(ctx context.Context, url string) (*Store, error) {
 		_, err = tx.Exec(ctx, schema)
 	}
 	if err == nil {
+		err = migrate(ctx, tx)
+	}
+	if err == nil {
 		err = tx.Commit(ctx)
 	}
 	if err != nil {
@@ -166,6 +169,14 @@ func load(ctx context.Context, tx pgx.Tx, tenant string) (Snapshot, error) {
 			return s, err
 		}
 		switch kind {
+		case "escrow-deals":
+			var v EscrowDeal
+			err = json.Unmarshal(body, &v)
+			s.Escrows = append(s.Escrows, v)
+		case "escrow-events":
+			var v EscrowEvent
+			err = json.Unmarshal(body, &v)
+			s.EscrowEvents = append(s.EscrowEvents, v)
 		case "decisions":
 			var v Decision
 			err = json.Unmarshal(body, &v)

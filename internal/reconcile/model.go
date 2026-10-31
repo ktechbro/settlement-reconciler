@@ -110,31 +110,37 @@ type ResolutionInput struct {
 	Note    string `json:"note"`
 }
 type Snapshot struct {
-	Decisions   []Decision
-	Mappings    []Mapping
-	Attempts    []Attempt
-	Settlements []Settlement
-	Coverage    []Coverage
+	Escrows      []EscrowDeal
+	EscrowEvents []EscrowEvent
+	Decisions    []Decision
+	Mappings     []Mapping
+	Attempts     []Attempt
+	Settlements  []Settlement
+	Coverage     []Coverage
 }
 type Finding struct {
 	Code   string `json:"code"`
 	Detail string `json:"detail"`
 }
 type Evidence struct {
-	Decisions   []string `json:"decisions"`
-	Mappings    []string `json:"mappings"`
-	Attempts    []string `json:"attempts"`
-	Settlements []string `json:"settlements"`
-	Coverage    []string `json:"coverage"`
+	Escrows      []string `json:"escrows,omitempty"`
+	EscrowEvents []string `json:"escrow_events,omitempty"`
+	Decisions    []string `json:"decisions"`
+	Mappings     []string `json:"mappings"`
+	Attempts     []string `json:"attempts"`
+	Settlements  []string `json:"settlements"`
+	Coverage     []string `json:"coverage"`
 }
 type Case struct {
-	Key         string    `json:"key"`
-	Subject     string    `json:"subject"`
-	Status      string    `json:"status"`
-	RuleVersion string    `json:"rule_version"`
-	Findings    []Finding `json:"findings"`
-	Candidates  []string  `json:"candidates"`
-	Evidence    Evidence  `json:"evidence"`
+	Category    string         `json:"category,omitempty"`
+	Escrow      *EscrowSummary `json:"escrow,omitempty"`
+	Key         string         `json:"key"`
+	Subject     string         `json:"subject"`
+	Status      string         `json:"status"`
+	RuleVersion string         `json:"rule_version"`
+	Findings    []Finding      `json:"findings"`
+	Candidates  []string       `json:"candidates"`
+	Evidence    Evidence       `json:"evidence"`
 }
 type Version struct {
 	Case            Case      `json:"case"`

@@ -63,6 +63,20 @@ func (s *Service) Write(ctx context.Context, tenant, actor, kind, key string, ra
 			}
 			id = v.ID
 			value = v
+		case "escrow-deals":
+			var v EscrowDeal
+			if err := strictDecode(raw, &v); err != nil {
+				return nil, invalid(err)
+			}
+			id = v.ID
+			value = v
+		case "escrow-events":
+			var v EscrowEvent
+			if err := strictDecode(raw, &v); err != nil {
+				return nil, invalid(err)
+			}
+			id = v.ID
+			value = v
 		case "reconcile":
 			var input struct{}
 			if err := strictDecode(raw, &input); err != nil {
@@ -74,7 +88,11 @@ func (s *Service) Write(ctx context.Context, tenant, actor, kind, key string, ra
 		default:
 			return nil, fmt.Errorf("unknown record kind")
 		}
-		if kind != "decisions" {
+		if kind == "escrow-deals" || kind == "escrow-events" {
+			if err := validateEscrow(value); err != nil {
+				return nil, invalid(err)
+			}
+		} else if kind != "decisions" {
 			if err := Validate(kind, value); err != nil {
 				return nil, invalid(err)
 			}

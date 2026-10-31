@@ -20,7 +20,7 @@ func add(c *Case, code, detail string) {
 
 // Evaluate has no clock, database, network or signature-verification side effects.
 // asOf is explicit; expiry is checked at acceptance/broadcast, never at finalization.
-func Evaluate(s Snapshot, asOf time.Time) []Case {
+func evaluateDirect(s Snapshot, asOf time.Time) []Case {
 	mappings := map[string]Mapping{}
 	for _, m := range s.Mappings {
 		mappings[m.ID] = m

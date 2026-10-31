@@ -35,6 +35,20 @@ func run() error {
 			break
 		}
 	}
+	if os.Getenv("IMPORT_ESCROW_EVENTS") == "true" {
+		escrowTotal := 0
+		for {
+			n, err := s.ImportEscrowPage(ctx, os.Getenv("IMPORT_TENANT"), os.Getenv("IMPORT_SOURCE_ID"), os.Getenv("INDEXER_URL"), os.Getenv("INDEXER_SCOPE"))
+			if err != nil {
+				return err
+			}
+			escrowTotal += n
+			if n == 0 {
+				break
+			}
+		}
+		fmt.Printf("Imported %d native escrow actions.\n", escrowTotal)
+	}
 	fmt.Printf("Imported %d finalized movements; no payment coverage inferred.\n", total)
 	return nil
 }

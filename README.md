@@ -6,6 +6,8 @@ A Go/PostgreSQL authorization-to-settlement reconciler by [ktechbro](https://git
 
 Independent portfolio work inspired by the distinction between authorization and settlement in [Saifuro's documentation](https://docs.saifuro.com/reference/verdict-limits). Its signed demo envelope is a custom schema, **not a Saifuro production token implementation**.
 
+Native escrow funding, seller release, and buyer refund reconciliation is implemented. See [bindings, import, evidence API, and the producer-to-consumer demo](docs/escrow.md).
+
 ## Features
 
 - Explicit decision → payment attempt → transaction/event evidence links.
